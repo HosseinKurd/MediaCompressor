@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MediaCompressor.init(this);
-
         btn_SelectVideo = findViewById(R.id.btn_SelectVideo);
         btn_SelectPhoto = findViewById(R.id.btn_SelectPhoto);
         img_Photo = findViewById(R.id.img_Photo);
@@ -84,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                     compressionMsg.setVisibility(View.VISIBLE);
                     picDescription.setVisibility(View.GONE);
 
-                    MediaCompressor.compressVideo(sourceFilePath, destFilePath, 640, MediaCompressor.Measurement.Width, new MediaCompressor.IMediaCompressor() {
+                    MediaCompressor.getInstance(this).compressVideo(sourceFilePath, destFilePath, 640, MediaCompressor.Measurement.Width, new MediaCompressor.IMediaCompressor() {
                         @Override
                         public void success() {
                             File file = new File(destFilePath);
@@ -115,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 } else if (requestCode == REQUEST_TYPE_IMAGE) {
-                    MediaCompressor.compressImage(sourceFilePath, destFilePath, new MediaCompressor.IMediaCompressor() {
+                    MediaCompressor.getInstance(this).compressImage(sourceFilePath, destFilePath, new MediaCompressor.IMediaCompressor() {
                         @Override
                         public void success() {
                             File imageFile = new File(destFilePath);

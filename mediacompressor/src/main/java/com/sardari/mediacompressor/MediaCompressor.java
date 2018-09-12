@@ -23,15 +23,18 @@ public class MediaCompressor {
     private final static int DEFAULT_VIDEO_WIDTH = 640; //HD
     private final static int DEFAULT_VIDEO_HEIGHT = 480; //HD
 
-    private static Context appContext;
     private static Handler handler;
+    private static MediaCompressor instance = null;
 
-    public static void init(Context context) {
-        appContext = context.getApplicationContext();
-        handler = new Handler(appContext.getMainLooper());
+    public static MediaCompressor getInstance(Context context) {
+        if (instance == null) {
+            instance = new MediaCompressor();
+            handler = new Handler(context.getMainLooper());
+        }
+        return instance;
     }
 
-    public static void compressImage(final String sourcePath, final String destPath, final IMediaCompressor iMediaCompressor) {
+    public void compressImage(final String sourcePath, final String destPath, final IMediaCompressor iMediaCompressor) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -159,15 +162,15 @@ public class MediaCompressor {
         }).start();
     }
 
-    public static void compressVideo(String videoFilePath, String destinationDir, IMediaCompressor iMediaCompressor) {
+    public void compressVideo(String videoFilePath, String destinationDir, IMediaCompressor iMediaCompressor) {
         compressVideo(videoFilePath, destinationDir, -1, -1, 0, -1, -1, iMediaCompressor);
     }
 
-    public static void compressVideo(String videoFilePath, String destinationDir, final long startTime, final long endTime, IMediaCompressor iMediaCompressor) {
+    public void compressVideo(String videoFilePath, String destinationDir, final long startTime, final long endTime, IMediaCompressor iMediaCompressor) {
         compressVideo(videoFilePath, destinationDir, -1, -1, 0, startTime, endTime, iMediaCompressor);
     }
 
-    public static void compressVideo(String videoFilePath, String destinationDir, int scale, Measurement measurement, IMediaCompressor iMediaCompressor) {
+    public void compressVideo(String videoFilePath, String destinationDir, int scale, Measurement measurement, IMediaCompressor iMediaCompressor) {
         if (measurement.value == Measurement.Width.value) {
             Log.w("TAG", "MediaCompressor_compressVideo_169-> : Measurement.Width");
             compressVideo(videoFilePath, destinationDir, scale, -1, 0, -1, -1, iMediaCompressor);
@@ -177,7 +180,7 @@ public class MediaCompressor {
         }
     }
 
-    public static void compressVideo(final String videoFilePath, final String destinationDir, final int outWidth, final int outHeight, final int bitrate, final long startTime, final long endTime, final IMediaCompressor iMediaCompressor) {
+    public void compressVideo(final String videoFilePath, final String destinationDir, final int outWidth, final int outHeight, final int bitrate, final long startTime, final long endTime, final IMediaCompressor iMediaCompressor) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -215,7 +218,7 @@ public class MediaCompressor {
         }).start();
     }
 
-    private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
@@ -234,11 +237,11 @@ public class MediaCompressor {
         return inSampleSize;
     }
 
-    private static void runOnUi(Runnable runnable) {
+    private void runOnUi(Runnable runnable) {
         handler.post(runnable);
     }
 
-    private static VideoDimen getVideoSize(String path, int outWidth, int outHeight) {
+    private VideoDimen getVideoSize(String path, int outWidth, int outHeight) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(path);
         String width = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
@@ -298,7 +301,7 @@ public class MediaCompressor {
         return videoDimen;
     }
 
-    private static class VideoDimen {
+    private class VideoDimen {
         private int originalWidth;
         private int originalHeight;
         private int resultWidth;
