@@ -26,7 +26,7 @@ public class MediaCompressor {
     private static Handler handler;
     private static MediaCompressor instance = null;
 
-    public static MediaCompressor getInstance(Context context) {
+    public static MediaCompressor with(Context context) {
         if (instance == null) {
             instance = new MediaCompressor();
             handler = new Handler(context.getMainLooper());
@@ -163,24 +163,20 @@ public class MediaCompressor {
     }
 
     public void compressVideo(String videoFilePath, String destinationDir, IMediaCompressor iMediaCompressor) {
-        compressVideo(videoFilePath, destinationDir, -1, -1, 0, -1, -1, iMediaCompressor);
-    }
-
-    public void compressVideo(String videoFilePath, String destinationDir, final long startTime, final long endTime, IMediaCompressor iMediaCompressor) {
-        compressVideo(videoFilePath, destinationDir, -1, -1, 0, startTime, endTime, iMediaCompressor);
+        compressVideo(videoFilePath, destinationDir, -1, -1, 0, iMediaCompressor);
     }
 
     public void compressVideo(String videoFilePath, String destinationDir, int scale, Measurement measurement, IMediaCompressor iMediaCompressor) {
         if (measurement.value == Measurement.Width.value) {
             Log.w("TAG", "MediaCompressor_compressVideo_169-> : Measurement.Width");
-            compressVideo(videoFilePath, destinationDir, scale, -1, 0, -1, -1, iMediaCompressor);
+            compressVideo(videoFilePath, destinationDir, scale, -1, 0, iMediaCompressor);
         } else {
             Log.w("TAG", "MediaCompressor_compressVideo_169-> : Measurement.Height");
-            compressVideo(videoFilePath, destinationDir, -1, scale, 0, -1, -1, iMediaCompressor);
+            compressVideo(videoFilePath, destinationDir, -1, scale, 0, iMediaCompressor);
         }
     }
 
-    public void compressVideo(final String videoFilePath, final String destinationDir, final int outWidth, final int outHeight, final int bitrate, final long startTime, final long endTime, final IMediaCompressor iMediaCompressor) {
+    public void compressVideo(final String videoFilePath, final String destinationDir, final int outWidth, final int outHeight, final int bitrate, final IMediaCompressor iMediaCompressor) {
         new Thread(new Runnable() {
             @Override
             public void run() {
