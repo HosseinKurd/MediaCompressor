@@ -19,7 +19,7 @@ allprojects {
 Step 2. Add the dependency
 ```groovy
 dependencies {
-    implementation 'com.github.ali-sardari:MediaCompressor:1.0.0-beta'
+    implementation 'com.github.ali-sardari:MediaCompressor:1.0.0'
 }
 ```
 
