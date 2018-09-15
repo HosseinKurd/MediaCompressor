@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                     compressionMsg.setVisibility(View.VISIBLE);
                     picDescription.setVisibility(View.GONE);
 
-                    MediaCompressor.with(this).compressVideo(sourceFilePath, destFilePath, 640, MediaCompressor.Measurement.Width, new MediaCompressor.IMediaCompressor() {
+                    MediaCompressor.with(this).compressVideo(sourceFilePath, destFilePath, 640, MediaCompressor.Measurement.Width, new MediaCompressor.MediaCompressorListener() {
                         @Override
                         public void success() {
                             File file = new File(destFilePath);
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 } else if (requestCode == REQUEST_TYPE_IMAGE) {
-                    MediaCompressor.with(this).compressImage(sourceFilePath, destFilePath, new MediaCompressor.IMediaCompressor() {
+                    MediaCompressor.with(this).compressImage(sourceFilePath, destFilePath, new MediaCompressor.MediaCompressorListener() {
                         @Override
                         public void success() {
                             File imageFile = new File(destFilePath);

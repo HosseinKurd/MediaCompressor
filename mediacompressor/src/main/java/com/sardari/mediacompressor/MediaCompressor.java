@@ -12,7 +12,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 
-import com.sardari.mediacompressor.videocompression.MediaController;
+import com.sardari.mediacompressor.video_compression.MediaController;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -34,7 +34,7 @@ public class MediaCompressor {
         return instance;
     }
 
-    public void compressImage(final String sourcePath, final String destPath, final IMediaCompressor iMediaCompressor) {
+    public void compressImage(final String sourcePath, final String destPath, final MediaCompressorListener listener) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -131,7 +131,7 @@ public class MediaCompressor {
                     runOnUi(new Runnable() {
                         @Override
                         public void run() {
-                            iMediaCompressor.failed();
+                            listener.failed();
                         }
                     });
                     return;
@@ -145,7 +145,7 @@ public class MediaCompressor {
                     runOnUi(new Runnable() {
                         @Override
                         public void run() {
-                            iMediaCompressor.failed();
+                            listener.failed();
                         }
                     });
 
@@ -155,28 +155,28 @@ public class MediaCompressor {
                 runOnUi(new Runnable() {
                     @Override
                     public void run() {
-                        iMediaCompressor.success();
+                        listener.success();
                     }
                 });
             }
         }).start();
     }
 
-    public void compressVideo(String videoFilePath, String destinationDir, IMediaCompressor iMediaCompressor) {
-        compressVideo(videoFilePath, destinationDir, -1, -1, 0, iMediaCompressor);
+    public void compressVideo(String videoFilePath, String destinationDir, MediaCompressorListener listener) {
+        compressVideo(videoFilePath, destinationDir, -1, -1, 0, listener);
     }
 
-    public void compressVideo(String videoFilePath, String destinationDir, int scale, Measurement measurement, IMediaCompressor iMediaCompressor) {
+    public void compressVideo(String videoFilePath, String destinationDir, int scale, Measurement measurement, MediaCompressorListener listener) {
         if (measurement.value == Measurement.Width.value) {
             Log.w("TAG", "MediaCompressor_compressVideo_169-> : Measurement.Width");
-            compressVideo(videoFilePath, destinationDir, scale, -1, 0, iMediaCompressor);
+            compressVideo(videoFilePath, destinationDir, scale, -1, 0, listener);
         } else {
             Log.w("TAG", "MediaCompressor_compressVideo_169-> : Measurement.Height");
-            compressVideo(videoFilePath, destinationDir, -1, scale, 0, iMediaCompressor);
+            compressVideo(videoFilePath, destinationDir, -1, scale, 0, listener);
         }
     }
 
-    public void compressVideo(final String videoFilePath, final String destinationDir, final int outWidth, final int outHeight, final int bitrate, final IMediaCompressor iMediaCompressor) {
+    public void compressVideo(final String videoFilePath, final String destinationDir, final int outWidth, final int outHeight, final int bitrate, final MediaCompressorListener listener) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -197,7 +197,7 @@ public class MediaCompressor {
                     runOnUi(new Runnable() {
                         @Override
                         public void run() {
-                            iMediaCompressor.success();
+                            listener.success();
                         }
                     });
                 } else {
@@ -206,7 +206,7 @@ public class MediaCompressor {
                     runOnUi(new Runnable() {
                         @Override
                         public void run() {
-                            iMediaCompressor.failed();
+                            listener.failed();
                         }
                     });
                 }
@@ -319,7 +319,7 @@ public class MediaCompressor {
         }
     }
 
-    public interface IMediaCompressor {
+    public interface MediaCompressorListener {
         void success();
 
         void failed();

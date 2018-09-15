@@ -1,4 +1,4 @@
-package com.sardari.mediacompressor.videocompression;
+package com.sardari.mediacompressor.video_compression;
 
 public class Sample {
     private long offset = 0;

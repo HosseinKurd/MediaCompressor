@@ -1,4 +1,4 @@
-package com.sardari.mediacompressor.videocompression;
+package com.sardari.mediacompressor.video_compression;
 
 import android.annotation.TargetApi;
 import android.media.MediaCodec;

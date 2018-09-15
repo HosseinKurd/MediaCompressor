@@ -1,4 +1,4 @@
-package com.sardari.mediacompressor.videocompression;
+package com.sardari.mediacompressor.video_compression;
 
 /**
  * @Author By Jorge E. Hernandez (@lalongooo) 2015
