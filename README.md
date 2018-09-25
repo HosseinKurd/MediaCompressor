@@ -20,7 +20,7 @@ Step 2. Add the dependency
 ```groovy
 dependencies {
         implementation 'com.googlecode.mp4parser:isoparser:1.0.6'
-        implementation ('com.github.ali-sardari:MediaCompressor:1.1.1') {
+        implementation ('com.github.ali-sardari:MediaCompressor:1.1.2') {
             exclude group: 'com.googlecode.mp4parser'
         }
     }
