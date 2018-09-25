@@ -20,7 +20,7 @@ Step 2. Add the dependency
 ```groovy
 dependencies {
         implementation 'com.googlecode.mp4parser:isoparser:1.0.6'
-        implementation ('com.github.ali-sardari:MediaCompressor:1.1.0') {
+        implementation ('com.github.ali-sardari:MediaCompressor:1.1.1') {
             exclude group: 'com.googlecode.mp4parser'
         }
     }
@@ -29,7 +29,7 @@ dependencies {
 Then in your Java Code, you use it like below.
 
 ```java
-MediaCompressor.getInstance(yourContext).compressVideo(sourceFilePath, destFilePath, 640, 480, new MediaCompressor.IMediaCompressor() {
+MediaCompressor.with(yourContext).compressVideo(sourceFilePath, destFilePath, 640, 480, new MediaCompressor.IMediaCompressor() {
   @Override
   public void success() {
       File file = new File(destFilePath);
