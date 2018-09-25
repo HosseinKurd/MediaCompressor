@@ -88,7 +88,8 @@ public class MediaController {
     public native static int convertVideoFrame(ByteBuffer src, ByteBuffer dest, int destFormat, int width, int height, int padding, int swap);
 
     private void didWriteData(final boolean last, final boolean error) {
-        Log.w("TAG", "MediaController_92-> :");
+        Log.w("TAG", "MediaController_92-> :last= " + last + " , error= " + error);
+
         final boolean firstWrite = videoConvertFirstWrite;
         if (firstWrite) {
             videoConvertFirstWrite = false;
@@ -196,10 +197,10 @@ public class MediaController {
     }
 
     public boolean convertVideo(String sourcePath, String destDir) {
-        return convertVideo(sourcePath, destDir, 0, 0, 0);
+        return convertVideo(sourcePath, destDir, 0, 0, 0, null);
     }
 
-    public boolean convertVideo(final String sourcePath, String destDir, int outWidth, int outHeight, int outBitrate) {
+    public boolean convertVideo(final String sourcePath, String destDir, int outWidth, int outHeight, int outBitrate, callback callback) {
         this.path = sourcePath;
 
         long startTime = -1;
@@ -397,6 +398,8 @@ public class MediaController {
                             }
                         }
 
+                        float fullSize = 0;
+
                         while (!outputDone) {
                             if (!inputDone) {
                                 boolean eof = false;
@@ -433,6 +436,8 @@ public class MediaController {
 
                             boolean decoderOutputAvailable = !decoderDone;
                             boolean encoderOutputAvailable = true;
+
+
                             while (decoderOutputAvailable || encoderOutputAvailable) {
                                 int encoderStatus = encoder.dequeueOutputBuffer(info, TIMEOUT_USEC);
                                 if (encoderStatus == MediaCodec.INFO_TRY_AGAIN_LATER) {
@@ -455,10 +460,17 @@ public class MediaController {
                                     } else {
                                         encodedData = encoder.getOutputBuffer(encoderStatus);
                                     }
+
                                     if (encodedData == null) {
                                         throw new RuntimeException("encoderOutputBuffer " + encoderStatus + " was null");
                                     }
+
                                     if (info.size > 1) {
+                                        fullSize += info.size;
+                                        callback.progress(fullSize);
+
+//                                        Log.w("TAG", "MediaController_convertVideo_463-> :" + fullSize);
+
                                         if ((info.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) == 0) {
                                             if (mediaMuxer.writeSampleData(videoTrackIndex, encodedData, info, false)) {
                                                 didWriteData(false, false);
@@ -633,6 +645,7 @@ public class MediaController {
             didWriteData(true, true);
             return false;
         }
+
         didWriteData(true, error);
 
 //        cachedFile = cacheFile;
@@ -646,7 +659,12 @@ public class MediaController {
         // cacheFile.delete();
         // inputFile.delete();
 
-        Log.e("MediaController6", "convertVideo-> :resultWidth  = " + resultWidth + " ,resultHeight  = " + resultHeight);
+//        Log.e("MediaController6", "convertVideo-> :resultWidth  = " + resultWidth + " ,resultHeight  = " + resultHeight);
+
+        if (!error) {
+            Log.w("TAG", "MediaController_convertVideo_665-> :" + cacheFile.getPath());
+            callback.progress(cacheFile.length());
+        }
 
         return true;
     }
@@ -662,5 +680,9 @@ public class MediaController {
             if (outChannel != null)
                 outChannel.close();
         }
+    }
+
+    public interface callback {
+        void progress(float progress);
     }
 }

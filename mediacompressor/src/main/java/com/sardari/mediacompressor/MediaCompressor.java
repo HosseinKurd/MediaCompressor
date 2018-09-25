@@ -190,7 +190,18 @@ public class MediaCompressor {
                         destinationDir,
                         videoDimen.resultWidth,
                         videoDimen.resultHeight,
-                        bitrate);
+                        bitrate,
+                        new MediaController.callback() {
+                            @Override
+                            public void progress(final float progress) {
+                                runOnUi(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        listener.progress(progress);
+                                    }
+                                });
+                            }
+                        });
                 if (isConverted) {
                     Log.v(LOG_TAG, "Video conversion complete");
 

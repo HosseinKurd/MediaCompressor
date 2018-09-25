@@ -95,6 +95,10 @@ public class MainActivity extends AppCompatActivity {
                                 value = length + " KB";
 
                             String text = String.format(Locale.US, "%s\nName: %s\nSize: %s", getString(R.string.video_compression_complete), file.getName(), value);
+
+//                            File file = new File(destFilePath);
+//                            String text = String.format(Locale.US, "%s\nName: %s\nSize: %s", getString(R.string.video_compression_complete), file.getName(), file.length());
+
                             compressionMsg.setVisibility(View.GONE);
                             picDescription.setVisibility(View.VISIBLE);
                             picDescription.setText(text);
@@ -109,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void progress(float progress) {
-
+                            Log.w("TAG", "MainActivity_progress_147-> :" + progress);
                         }
                     });
                 } else if (requestCode == REQUEST_TYPE_IMAGE) {
@@ -144,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void progress(float progress) {
-
                         }
                     });
                 }
